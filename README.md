@@ -1,11 +1,11 @@
-# @liepin/react-streaming
+# @roaming-ai/react-streaming
 
 React components and hooks for sequential streaming effects.
 
 ## Install
 
 ```bash
-npm install @liepin/react-streaming
+npm install @roaming-ai/react-streaming
 ```
 
 React is a peer dependency and is not bundled.
@@ -17,8 +17,8 @@ order, while an effect controls how each item is revealed.
 
 ```tsx
 import React from 'react';
-import { Streaming, TypewriterEffect } from '@liepin/react-streaming';
-import type { StreamingItem } from '@liepin/react-streaming';
+import { Streaming, TypewriterEffect } from '@roaming-ai/react-streaming';
+import type { StreamingItem } from '@roaming-ai/react-streaming';
 
 const items: StreamingItem[] = [
   {
