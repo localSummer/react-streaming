@@ -2,7 +2,8 @@ import React, { useEffect, useMemo } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   Streaming,
-  TypewriterEffect
+  TypewriterEffect,
+  useStreamingAutoScroll
 } from '../src';
 import type { StreamingEffectProps, StreamingItem } from '../src';
 
@@ -17,11 +18,32 @@ interface StreamingDemoProps {
 
 const frameStyle: React.CSSProperties = {
   width: 'min(680px, 100%)',
+  maxHeight: 420,
+  overflowY: 'auto',
   padding: 24,
   border: '1px solid #d9dee7',
   borderRadius: 8,
   background: '#ffffff',
   boxShadow: '0 8px 24px rgba(31, 41, 55, 0.08)'
+};
+
+const DemoFrame: React.FC<{
+  enabled: boolean;
+  resetKey: number;
+  children: React.ReactNode;
+}> = ({ enabled, resetKey, children }) => {
+  const { containerRef, bottomRef } = useStreamingAutoScroll({
+    enabled,
+    deps: [resetKey],
+    behavior: 'smooth'
+  });
+
+  return (
+    <div ref={containerRef} style={frameStyle}>
+      {children}
+      <div ref={bottomRef} />
+    </div>
+  );
 };
 
 const sectionStyle: React.CSSProperties = {
@@ -80,7 +102,7 @@ const StreamingDemo: React.FC<StreamingDemoProps> = ({
   const items = useMemo(() => createItems(skipSecond), [skipSecond]);
 
   return (
-    <div style={frameStyle}>
+    <DemoFrame enabled={enabled} resetKey={resetKey}>
       <Streaming
         items={items}
         enabled={enabled}
@@ -94,7 +116,7 @@ const StreamingDemo: React.FC<StreamingDemoProps> = ({
           </p>
         }
       />
-    </div>
+    </DemoFrame>
   );
 };
 
@@ -123,7 +145,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Sequentially reveals StreamingItem content and optionally applies an effect to each item.'
+          'Sequentially reveals StreamingItem content and optionally applies an effect to each item. The demo container stays pinned to the latest section while it streams.'
       }
     }
   },
@@ -195,7 +217,7 @@ export const CustomEffect: Story = {
     ...TypewriterSequence.args
   },
   render: ({ enabled, animation, resetKey }) => (
-    <div style={frameStyle}>
+    <DemoFrame enabled={enabled} resetKey={resetKey}>
       <Streaming
         items={createItems(false)}
         enabled={enabled}
@@ -208,6 +230,6 @@ export const CustomEffect: Story = {
           </p>
         }
       />
-    </div>
+    </DemoFrame>
   )
 };

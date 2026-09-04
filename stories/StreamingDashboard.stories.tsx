@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { BlockRevealEffect, Streaming, TypewriterEffect } from '../src';
+import {
+  BlockRevealEffect,
+  Streaming,
+  TypewriterEffect,
+  useStreamingAutoScroll
+} from '../src';
 import type { StreamingItem } from '../src';
 import workspaceImage from './assets/analytics-workspace.png';
 
@@ -31,7 +36,8 @@ const colors = {
 
 const dashboardStyle: React.CSSProperties = {
   width: 'min(1080px, 100%)',
-  overflow: 'hidden',
+  maxHeight: '100vh',
+  overflowY: 'auto',
   border: `1px solid ${colors.line}`,
   borderRadius: 8,
   background: colors.canvas,
@@ -39,6 +45,25 @@ const dashboardStyle: React.CSSProperties = {
   boxShadow: '0 14px 40px rgba(23, 32, 51, 0.12)',
   fontFamily:
     'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+};
+
+const DashboardFrame: React.FC<{
+  enabled: boolean;
+  resetKey: number;
+  children: React.ReactNode;
+}> = ({ enabled, resetKey, children }) => {
+  const { containerRef, bottomRef } = useStreamingAutoScroll({
+    enabled,
+    deps: [resetKey],
+    behavior: 'smooth'
+  });
+
+  return (
+    <div ref={containerRef} style={dashboardStyle}>
+      {children}
+      <div ref={bottomRef} />
+    </div>
+  );
 };
 
 const sectionStyle: React.CSSProperties = {
@@ -520,7 +545,7 @@ const StreamingDashboard: React.FC<StreamingDashboardProps> = ({
   const items = useMemo(createDashboardItems, []);
 
   return (
-    <div style={dashboardStyle}>
+    <DashboardFrame enabled={enabled} resetKey={resetKey}>
       <Streaming
         key={resetKey}
         items={items}
@@ -542,7 +567,7 @@ const StreamingDashboard: React.FC<StreamingDashboardProps> = ({
           </div>
         }
       />
-    </div>
+    </DashboardFrame>
   );
 };
 
@@ -554,7 +579,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A full report assembled from heterogeneous React nodes: text, metrics, image, progress bars, chart-like visuals, table, quote and action cards.'
+          'A full report assembled from heterogeneous React nodes: text, metrics, image, progress bars, chart-like visuals, table, quote and action cards. The viewport stays pinned to the latest section while it streams.'
       }
     }
   },
@@ -620,7 +645,7 @@ export const BlockRevealReport: Story = {
     }
   },
   render: ({ enabled, animation, delay, duration, resetKey }) => (
-    <div style={dashboardStyle}>
+    <DashboardFrame enabled={enabled} resetKey={resetKey}>
       <Streaming
         key={resetKey}
         items={createDashboardItems()}
@@ -642,6 +667,6 @@ export const BlockRevealReport: Story = {
           </div>
         }
       />
-    </div>
+    </DashboardFrame>
   )
 };
