@@ -3,6 +3,11 @@ export { Streaming } from './components/Streaming';
 export type { StreamingProps } from './components/Streaming';
 export { StreamingRenderer } from './components/StreamingRenderer';
 export type { StreamingRendererProps } from './components/StreamingRenderer';
+export { MarkdownStream } from './components/MarkdownStream';
+export type {
+  MarkdownBlockMeta,
+  MarkdownStreamProps
+} from './components/MarkdownStream';
 export { useStreaming } from './hooks/useStreaming';
 export { useStreamingAutoScroll } from './hooks/useStreamingAutoScroll';
 export { TypewriterEffect } from './effects/TypewriterEffect';

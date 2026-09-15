@@ -81,6 +81,35 @@ const FadeEffect: React.FC<StreamingEffectProps> = ({
 Pass an effect to `Streaming` for the default, or set `effect` on one item to
 override it. Use `effect={null}` to complete an item immediately.
 
+## Markdown
+
+`MarkdownStream` heals incomplete syntax with `remend`, splits into blocks, and
+memoizes completed blocks. Pass `render` for actual Markdown-to-React mapping.
+
+Put it in **one** `StreamingItem` with `effect={null}`. Do not wrap it in
+`TypewriterEffect`.
+
+```tsx
+import ReactMarkdown from 'react-markdown';
+import { MarkdownStream, Streaming } from '@roaming-ai/react-streaming';
+
+<Streaming
+  items={[
+    {
+      key: 'markdown',
+      content: (
+        <MarkdownStream
+          markdown={text}
+          render={(block) => <ReactMarkdown>{block}</ReactMarkdown>}
+        />
+      ),
+      effect: null
+    }
+  ]}
+  enabled={streaming}
+/>
+```
+
 `useStreamingAutoScroll` can keep a scroll container pinned to the latest
 streamed content:
 

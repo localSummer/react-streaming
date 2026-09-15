@@ -8,5 +8,6 @@ export default defineConfig({
   sourcemap: true,
   treeshake: true,
   external: ['react'],
+  noExternal: ['remend'],
   target: 'es2018'
 });
