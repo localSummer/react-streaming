@@ -2,7 +2,7 @@
   "name": "@roaming-ai/react-streaming",
   "version": "0.2.0",
   "description": "React components, hooks, and pluggable effects for sequential streaming UI.",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/localSummer/react-streaming"
