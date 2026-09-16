@@ -1,0 +1,563 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "react-streaming 组件级架构",
+    "output": "react-streaming-architecture.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/localSummer/react-streaming",
+      "revision": "358955c19a398e63e988216d315211db614e8912"
+    },
+    "viewBox": [
+      1340,
+      620
+    ],
+    "views": [
+      {
+        "id": "core-pipeline",
+        "label": "核心流式管线",
+        "focus": [
+          "app",
+          "streaming",
+          "use-streaming",
+          "renderer",
+          "render-items"
+        ],
+        "note": "Streaming 组合 useStreaming 状态机与 StreamingRenderer，onFinish 驱动逐条放行。"
+      },
+      {
+        "id": "builtin-effects",
+        "label": "内置效果家族",
+        "focus": [
+          "render-items",
+          "typewriter",
+          "word-reveal",
+          "block-reveal",
+          "list-reveal",
+          "use-typewriter"
+        ],
+        "note": "四个内置效果实现 StreamingEffect 契约，打字机类共用 useTypewriter 引擎。"
+      },
+      {
+        "id": "markdown-path",
+        "label": "Markdown 流式渲染",
+        "focus": [
+          "app",
+          "markdown-stream",
+          "remend",
+          "parse-blocks"
+        ],
+        "note": "remend 修残后按顶层切块，块级 memo 让流式增长只重绘末块。"
+      },
+      {
+        "id": "scroll-follow",
+        "label": "滚动跟随",
+        "focus": [
+          "app",
+          "use-auto-scroll"
+        ],
+        "note": "观察容器内容增长并贴底滚动，用户主动滚动即脱离跟随。"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "app",
+      "type": "external",
+      "label": "业务应用",
+      "sublabel": "App",
+      "pos": [
+        50,
+        40
+      ],
+      "size": [
+        140,
+        60
+      ]
+    },
+    {
+      "id": "streaming",
+      "type": "frontend",
+      "label": "Streaming",
+      "sublabel": "主入口组件",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/components/Streaming.tsx",
+          "label": "主组件"
+        }
+      ]
+    },
+    {
+      "id": "renderer",
+      "type": "frontend",
+      "label": "StreamingRenderer",
+      "sublabel": "纯展示层",
+      "pos": [
+        660,
+        40
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/components/StreamingRenderer.tsx",
+          "label": "渲染器"
+        }
+      ]
+    },
+    {
+      "id": "types",
+      "type": "backend",
+      "label": "core/types",
+      "sublabel": "StreamingEffect 契约",
+      "pos": [
+        150,
+        170
+      ],
+      "size": [
+        140,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/core/types.ts",
+          "label": "共享类型"
+        }
+      ]
+    },
+    {
+      "id": "use-streaming",
+      "type": "backend",
+      "label": "useStreaming",
+      "sublabel": "streamingIndex 状态机",
+      "pos": [
+        400,
+        170
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/hooks/useStreaming.ts",
+          "label": "放行 Hook"
+        }
+      ]
+    },
+    {
+      "id": "render-items",
+      "type": "frontend",
+      "label": "renderItems",
+      "sublabel": "StreamingItemView 效果解析",
+      "pos": [
+        900,
+        170
+      ],
+      "size": [
+        190,
+        60
+      ],
+      "tag": "条目级 > 全局",
+      "sources": [
+        {
+          "path": "src/core/renderItems.tsx",
+          "label": "装配"
+        }
+      ]
+    },
+    {
+      "id": "markdown-stream",
+      "type": "frontend",
+      "label": "MarkdownStream",
+      "sublabel": "Markdown 分块渲染",
+      "pos": [
+        100,
+        300
+      ],
+      "size": [
+        170,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/components/MarkdownStream.tsx",
+          "label": "组件"
+        }
+      ]
+    },
+    {
+      "id": "block-reveal",
+      "type": "frontend",
+      "label": "BlockRevealEffect",
+      "sublabel": "整块淡入",
+      "pos": [
+        620,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/effects/BlockRevealEffect.tsx",
+          "label": "效果"
+        }
+      ]
+    },
+    {
+      "id": "typewriter",
+      "type": "frontend",
+      "label": "TypewriterEffect",
+      "sublabel": "逐字打字机",
+      "pos": [
+        860,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/effects/TypewriterEffect.tsx",
+          "label": "效果"
+        }
+      ]
+    },
+    {
+      "id": "word-reveal",
+      "type": "frontend",
+      "label": "WordRevealEffect",
+      "sublabel": "逐词打字机",
+      "pos": [
+        1120,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/effects/WordRevealEffect.tsx",
+          "label": "效果"
+        }
+      ]
+    },
+    {
+      "id": "list-reveal",
+      "type": "frontend",
+      "label": "ListRevealEffect",
+      "sublabel": "子项逐个浮现",
+      "pos": [
+        640,
+        430
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/effects/ListRevealEffect.tsx",
+          "label": "效果"
+        }
+      ]
+    },
+    {
+      "id": "remend",
+      "type": "external",
+      "label": "remend",
+      "sublabel": "残缺 Markdown 修补",
+      "pos": [
+        100,
+        430
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "package.json",
+          "label": "npm 依赖"
+        }
+      ]
+    },
+    {
+      "id": "parse-blocks",
+      "type": "backend",
+      "label": "parseMarkdownBlocks",
+      "sublabel": "顶层切块 · fence 感知",
+      "pos": [
+        340,
+        430
+      ],
+      "size": [
+        190,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/markdown/parseMarkdownBlocks.ts",
+          "label": "解析"
+        }
+      ]
+    },
+    {
+      "id": "use-typewriter",
+      "type": "backend",
+      "label": "useTypewriter",
+      "sublabel": "段落树 + 定时器",
+      "pos": [
+        950,
+        430
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "tag": "unit: char / word",
+      "sources": [
+        {
+          "path": "src/effects/useTypewriter.ts",
+          "label": "引擎 Hook"
+        }
+      ]
+    },
+    {
+      "id": "use-auto-scroll",
+      "type": "backend",
+      "label": "useStreamingAutoScroll",
+      "sublabel": "ResizeObserver 贴底跟随",
+      "pos": [
+        50,
+        540
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/hooks/useStreamingAutoScroll.ts",
+          "label": "滚动 Hook"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "app-to-streaming",
+      "from": "app",
+      "to": "streaming",
+      "label": "items / enabled / resetKey",
+      "variant": "emphasis"
+    },
+    {
+      "id": "streaming-to-usestreaming",
+      "from": "streaming",
+      "to": "use-streaming",
+      "label": "useStreaming()",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 26
+    },
+    {
+      "id": "streaming-to-renderer",
+      "from": "streaming",
+      "to": "renderer",
+      "label": "visibleItems",
+      "variant": "emphasis"
+    },
+    {
+      "id": "renderer-to-renderitems",
+      "from": "renderer",
+      "to": "render-items",
+      "label": "已放行条目",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "onfinish-loop",
+      "from": "render-items",
+      "to": "use-streaming",
+      "label": "onFinish · 放行下一条",
+      "variant": "security",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "usestreaming-to-types",
+      "from": "use-streaming",
+      "to": "types",
+      "label": "类型契约",
+      "variant": "dashed",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "renderitems-to-typewriter",
+      "from": "render-items",
+      "to": "typewriter",
+      "label": "逐字",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        920,
+        250
+      ]
+    },
+    {
+      "id": "renderitems-to-wordreveal",
+      "from": "render-items",
+      "to": "word-reveal",
+      "label": "逐词",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "renderitems-to-blockreveal",
+      "from": "render-items",
+      "to": "block-reveal",
+      "label": "整块淡入",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDx": -60
+    },
+    {
+      "id": "renderitems-to-listreveal",
+      "from": "render-items",
+      "to": "list-reveal",
+      "label": "子项逐个",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "via": [
+        [
+          995,
+          275
+        ],
+        [
+          850,
+          275
+        ],
+        [
+          850,
+          460
+        ]
+      ],
+      "labelAt": [
+        858,
+        380
+      ]
+    },
+    {
+      "id": "typewriter-to-usetypewriter",
+      "from": "typewriter",
+      "to": "use-typewriter",
+      "label": "unit: character",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "wordreveal-to-usetypewriter",
+      "from": "word-reveal",
+      "to": "use-typewriter",
+      "label": "unit: word",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "app-to-markdownstream",
+      "from": "app",
+      "to": "markdown-stream",
+      "label": "markdown",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "markdownstream-to-remend",
+      "from": "markdown-stream",
+      "to": "remend",
+      "label": "修残补全",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        128,
+        395
+      ]
+    },
+    {
+      "id": "markdownstream-to-parseblocks",
+      "from": "markdown-stream",
+      "to": "parse-blocks",
+      "label": "顶层切块",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 26
+    },
+    {
+      "id": "app-to-autoscroll",
+      "from": "app",
+      "to": "use-auto-scroll",
+      "label": "容器贴底",
+      "fromSide": "left",
+      "toSide": "top",
+      "via": [
+        [
+          20,
+          70
+        ],
+        [
+          20,
+          500
+        ],
+        [
+          140,
+          500
+        ]
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "装配层",
+      "items": [
+        "Streaming 组合 useStreaming 状态机与 StreamingRenderer",
+        "条目级 effect 覆盖全局 effect，null 显式禁用"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "效果层",
+      "items": [
+        "打字机 / 逐词 / 整块淡入 / 子项逐个四类内置效果",
+        "onFinish 回调驱动放行节奏，动画组件实现 StreamingEffect 契约"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Markdown 与滚动",
+      "items": [
+        "remend 修残 + 块级 memo，流式增长只重绘末块",
+        "ResizeObserver 贴底跟随，用户主动滚动即脱离"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,397 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "react-streaming 组件运转依赖关系",
+    "output": "react-streaming-runtime-deps.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "one-item-lifecycle",
+        "label": "单条内容生命周期",
+        "focus": [
+          "items",
+          "use-streaming",
+          "visible-items",
+          "effect-comp",
+          "onfinish"
+        ],
+        "note": "一条内容从放行到效果播完触发 onFinish，索引推进放行下一条。"
+      },
+      {
+        "id": "typewriter-path",
+        "label": "打字机路径",
+        "focus": [
+          "effect-comp",
+          "use-typewriter",
+          "segment-tree",
+          "timer",
+          "onfinish"
+        ],
+        "note": "ReactNode 解析为段落树，定时器逐 unit 消费并按预算重放。"
+      },
+      {
+        "id": "markdown-path",
+        "label": "Markdown 路径",
+        "focus": [
+          "markdown-src",
+          "remend",
+          "blocks",
+          "memo-blocks"
+        ],
+        "note": "残缺输入先修残，再顶层切块，块级 memo 让增长只重绘末块。"
+      },
+      {
+        "id": "scroll-path",
+        "label": "滚动跟随路径",
+        "focus": [
+          "dom-growth",
+          "observers",
+          "auto-scroll"
+        ],
+        "note": "观察器监听内容增长，贴底时跟随滚动，用户主动滚动即脱离。"
+      }
+    ],
+    "viewBox": [
+      1075,
+      640
+    ]
+  },
+  "stages": [
+    {
+      "label": "输入"
+    },
+    {
+      "label": "状态机"
+    },
+    {
+      "label": "效果层"
+    },
+    {
+      "label": "引擎"
+    },
+    {
+      "label": "输出"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "items",
+      "type": "frontend",
+      "label": "items 数组",
+      "sublabel": "条目数组",
+      "stage": 0,
+      "row": 0,
+      "tag": "业务传入"
+    },
+    {
+      "id": "markdown-src",
+      "type": "frontend",
+      "label": "markdown 字符串",
+      "sublabel": "残缺 / 流式增长",
+      "stage": 0,
+      "row": 1,
+      "tag": "MD 输入"
+    },
+    {
+      "id": "dom-growth",
+      "type": "frontend",
+      "label": "容器内容增长",
+      "sublabel": "子节点尺寸变化",
+      "stage": 0,
+      "row": 2,
+      "tag": "DOM 事件源"
+    },
+    {
+      "id": "use-streaming",
+      "type": "backend",
+      "label": "useStreaming",
+      "sublabel": "streamingIndex",
+      "stage": 1,
+      "row": 0,
+      "tag": "放行状态机"
+    },
+    {
+      "id": "visible-items",
+      "type": "backend",
+      "label": "visibleItems",
+      "sublabel": "前 n 条 + onFinish",
+      "stage": 1,
+      "row": 1,
+      "tag": "已放行切片"
+    },
+    {
+      "id": "effect-comp",
+      "type": "cloud",
+      "label": "效果组件",
+      "sublabel": "Typewriter / Block …",
+      "stage": 2,
+      "row": 0,
+      "tag": "StreamingEffect"
+    },
+    {
+      "id": "remend",
+      "type": "external",
+      "label": "remend",
+      "sublabel": "残缺修补",
+      "stage": 1,
+      "row": 2,
+      "tag": "npm 依赖"
+    },
+    {
+      "id": "observers",
+      "type": "security",
+      "label": "观察器",
+      "sublabel": "ResizeObserver 为主",
+      "stage": 1,
+      "row": 3,
+      "tag": "观察器"
+    },
+    {
+      "id": "use-typewriter",
+      "type": "backend",
+      "label": "useTypewriter",
+      "sublabel": "装载 + 开播",
+      "stage": 3,
+      "row": 0,
+      "tag": "引擎 Hook"
+    },
+    {
+      "id": "blocks",
+      "type": "database",
+      "label": "parseMarkdownBlocks",
+      "sublabel": "顶层切块",
+      "stage": 2,
+      "row": 1,
+      "tag": "fence 感知"
+    },
+    {
+      "id": "segment-tree",
+      "type": "database",
+      "label": "段落树解析",
+      "sublabel": "ReactNode → SegmentNode",
+      "stage": 3,
+      "row": 1,
+      "tag": "parseNode"
+    },
+    {
+      "id": "timer",
+      "type": "messagebus",
+      "label": "setInterval",
+      "sublabel": "每 tick 1 unit",
+      "stage": 3,
+      "row": 2,
+      "tag": "计时器"
+    },
+    {
+      "id": "onfinish",
+      "type": "security",
+      "label": "onFinish 回调",
+      "sublabel": "index + 1",
+      "stage": 4,
+      "row": 0,
+      "tag": "放行驱动"
+    },
+    {
+      "id": "rendered",
+      "type": "frontend",
+      "label": "渲染画面",
+      "sublabel": "当前进度截取",
+      "stage": 4,
+      "row": 1,
+      "tag": "用户所见"
+    },
+    {
+      "id": "memo-blocks",
+      "type": "frontend",
+      "label": "块级 memo",
+      "sublabel": "只重绘末块",
+      "stage": 4,
+      "row": 2,
+      "tag": "MarkdownBlockView"
+    },
+    {
+      "id": "auto-scroll",
+      "type": "frontend",
+      "label": "贴底滚动",
+      "sublabel": "scrollToBottom",
+      "stage": 4,
+      "row": 3,
+      "tag": "跟随输出"
+    }
+  ],
+  "flows": [
+    {
+      "id": "items-in",
+      "from": "items",
+      "to": "use-streaming",
+      "label": "序列签名",
+      "classification": "输入",
+      "variant": "emphasis"
+    },
+    {
+      "id": "release-slice",
+      "from": "use-streaming",
+      "to": "visible-items",
+      "label": "放行切片",
+      "classification": "放行",
+      "variant": "emphasis"
+    },
+    {
+      "id": "visible-to-effect",
+      "from": "visible-items",
+      "to": "effect-comp",
+      "label": "content",
+      "classification": "装配",
+      "variant": "emphasis"
+    },
+    {
+      "id": "md-to-remend",
+      "from": "markdown-src",
+      "to": "remend",
+      "label": "修残",
+      "classification": "输入",
+      "variant": "emphasis"
+    },
+    {
+      "id": "remend-to-blocks",
+      "from": "remend",
+      "to": "blocks",
+      "label": "完整 MD",
+      "classification": "解析",
+      "variant": "emphasis"
+    },
+    {
+      "id": "growth-to-observers",
+      "from": "dom-growth",
+      "to": "observers",
+      "label": "尺寸变化",
+      "classification": "事件"
+    },
+    {
+      "id": "effect-to-engine",
+      "from": "effect-comp",
+      "to": "use-typewriter",
+      "label": "init + start",
+      "classification": "驱动",
+      "variant": "emphasis"
+    },
+    {
+      "id": "engine-to-parse",
+      "from": "use-typewriter",
+      "to": "segment-tree",
+      "label": "parseNode",
+      "classification": "解析"
+    },
+    {
+      "id": "parse-to-timer",
+      "from": "segment-tree",
+      "to": "timer",
+      "label": "unit 合计",
+      "classification": "预算"
+    },
+    {
+      "id": "timer-to-rendered",
+      "from": "timer",
+      "to": "rendered",
+      "label": "预算重放",
+      "classification": "输出",
+      "variant": "emphasis"
+    },
+    {
+      "id": "effect-complete",
+      "from": "use-typewriter",
+      "to": "onfinish",
+      "label": "complete",
+      "classification": "完成",
+      "variant": "security"
+    },
+    {
+      "id": "onfinish-back",
+      "from": "onfinish",
+      "to": "use-streaming",
+      "label": "回调推进",
+      "classification": "反馈",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "top",
+      "via": [
+        [
+          960,
+          40
+        ],
+        [
+          315,
+          40
+        ]
+      ],
+      "labelAt": [
+        637,
+        60
+      ]
+    },
+    {
+      "id": "blocks-to-memo",
+      "from": "blocks",
+      "to": "memo-blocks",
+      "label": "块 + meta",
+      "classification": "输出",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "bottom",
+      "via": [
+        [
+          620,
+          271
+        ],
+        [
+          620,
+          445
+        ],
+        [
+          960,
+          445
+        ]
+      ],
+      "labelAt": [
+        790,
+        445
+      ]
+    },
+    {
+      "id": "observers-to-scroll",
+      "from": "observers",
+      "to": "auto-scroll",
+      "label": "贴底跟随",
+      "classification": "输出",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "放行回路",
+      "items": [
+        "效果播完触发 onFinish，streamingIndex 才推进",
+        "序列签名校验丢弃上一轮迟到的回调"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "打字机引擎",
+      "items": [
+        "ReactNode 解析为段落树，原子节点整体出现",
+        "定时器逐 unit 消费，renderNode 按预算重放画面"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "旁路管线",
+      "items": [
+        "Markdown 管线独立于 items 放行回路",
+        "滚动跟随只观察 DOM，不参与内容渲染"
+      ]
+    }
+  ]
+}
